@@ -132,10 +132,31 @@ class MolecularPredictor:
             
             dataset_path = 'dataset.csv'
             if not os.path.exists(dataset_path):
-                logger.warning("⚠️ Dataset not found - predictions will work with reduced accuracy")
-                return False
+                logger.warning("⚠️ Dataset not found - checking for mock SMILES features...")
+                
+                # Try to load mock SMILES features
+                mock_features_path = 'models/smiles_features.pkl'
+                if os.path.exists(mock_features_path):
+                    global smiles_to_embedding
+                    smiles_to_embedding = joblib.load(mock_features_path)
+                    logger.info(f"✅ Mock SMILES features loaded: {len(smiles_to_embedding)} molecules")
+                    
+                    # Set basic dataset stats
+                    global dataset_stats
+                    dataset_stats = {
+                        'total_molecules': len(smiles_to_embedding),
+                        'embedding_dimensions': 64,
+                        'functional_groups': len(target_columns),
+                        'dataset_loaded': True,
+                        'smiles_available': True,
+                        'mock_data': True
+                    }
+                    return True
+                else:
+                    logger.warning("⚠️ No mock features found - predictions will work with reduced accuracy")
+                    return False
             
-            # Load dataset
+            # Load real dataset
             df = pd.read_csv(dataset_path)
             logger.info(f"📈 Dataset loaded: {len(df):,} molecules")
             
@@ -175,7 +196,8 @@ class MolecularPredictor:
                 'embedding_dimensions': len(embedding_cols),
                 'functional_groups': len(target_columns),
                 'dataset_loaded': True,
-                'smiles_available': 'smiles' in df.columns
+                'smiles_available': 'smiles' in df.columns,
+                'mock_data': False
             }
             
             self.dataset_loaded = True
