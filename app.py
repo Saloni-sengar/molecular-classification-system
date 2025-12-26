@@ -127,6 +127,8 @@ class MolecularPredictor:
     
     def load_dataset(self) -> bool:
         """Load dataset for SMILES lookup and molecular embeddings"""
+        global dataset_embeddings, smiles_to_embedding, dataset_stats
+        
         try:
             logger.info("📊 Loading molecular dataset...")
             
@@ -137,12 +139,10 @@ class MolecularPredictor:
                 # Try to load mock SMILES features
                 mock_features_path = 'models/smiles_features.pkl'
                 if os.path.exists(mock_features_path):
-                    global smiles_to_embedding
                     smiles_to_embedding = joblib.load(mock_features_path)
                     logger.info(f"✅ Mock SMILES features loaded: {len(smiles_to_embedding)} molecules")
                     
                     # Set basic dataset stats
-                    global dataset_stats
                     dataset_stats = {
                         'total_molecules': len(smiles_to_embedding),
                         'embedding_dimensions': 64,
@@ -161,7 +161,6 @@ class MolecularPredictor:
             logger.info(f"📈 Dataset loaded: {len(df):,} molecules")
             
             # Create SMILES to embedding mapping
-            global dataset_embeddings, smiles_to_embedding, dataset_stats
             
             # Extract embedding columns (numeric features)
             embedding_cols = df.select_dtypes(include=[np.number]).columns.tolist()
