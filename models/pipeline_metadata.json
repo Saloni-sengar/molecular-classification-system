@@ -1,0 +1,19 @@
+{
+  "created_at": "2025-12-23T14:44:26.861553",
+  "dataset_size": 129428,
+  "train_size": 103542,
+  "test_size": 25886,
+  "level1_accuracy": 0.9430966545623116,
+  "level2_avg_accuracy": 0.8920581271267558,
+  "functional_groups": [
+    "alcohol",
+    "carbonyl",
+    "amine",
+    "amide",
+    "alkene",
+    "alkyne",
+    "ether",
+    "fluorinated",
+    "nitrile"
+  ]
+}
