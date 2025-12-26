@@ -441,7 +441,12 @@ class MolecularPredictor:
             level1_model = models['level1']
             level1_pred = level1_model.predict(features)[0]
             level1_proba = level1_model.predict_proba(features)[0]
-            level1_confidence = float(max(level1_proba))
+            
+            # Handle different probability array shapes
+            if len(level1_proba) == 2:
+                level1_confidence = float(max(level1_proba))
+            else:
+                level1_confidence = float(level1_pred)
             
             # Level 2 Predictions (Multi-label: which specific groups?)
             level2_models = models['level2']
@@ -455,7 +460,13 @@ class MolecularPredictor:
                         group_model = level2_models[group_name]
                         group_pred = group_model.predict(features)[0]
                         group_proba = group_model.predict_proba(features)[0]
-                        group_confidence = float(group_proba[1])  # Probability of having this group
+                        
+                        # Handle different probability array shapes
+                        if len(group_proba) == 2:
+                            group_confidence = float(group_proba[1])  # Probability of having this group
+                        else:
+                            # For single-class predictions, use the prediction directly
+                            group_confidence = float(group_pred)
                         
                         level2_predictions[group_name] = group_confidence
                         
