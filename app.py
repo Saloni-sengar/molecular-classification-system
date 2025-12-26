@@ -690,9 +690,10 @@ if __name__ == '__main__':
     print("🚀 MOLECULAR FUNCTIONAL GROUP PREDICTOR API")
     print("=" * 60)
     
-    # Create mock models if they don't exist
+    # Create mock models if they don't exist (for deployment)
     if not os.path.exists('models/model_level1.pkl'):
-        print("⚠️ Models not found. Creating mock models...")
+        print("⚠️ Trained models not found. Creating demonstration models...")
+        print("💡 For production, upload your trained models or retrain using train_beginner.ipynb")
         try:
             exec(open('create_models.py').read())
             # Reload the predictor

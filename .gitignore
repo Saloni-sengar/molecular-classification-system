@@ -55,11 +55,14 @@ build/
 .env.test.local
 .env.production.local
 
-# Large files - too big for GitHub
+# Large model files - too big for GitHub (will be created automatically)
 models/*.pkl
 models/*.csv
 dataset.csv
 *.csv
+
+# But keep small essential files
+!models/pipeline_metadata.json
 
 # Logs
 *.log
