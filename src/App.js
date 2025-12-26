@@ -28,6 +28,11 @@ function App() {
     level2Accuracy: 86.84
   });
 
+  // API Configuration - automatically detects environment
+  const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://molecular-classification-system.onrender.com'
+    : 'http://localhost:5000';
+
   // Check backend status on app start
   useEffect(() => {
     checkBackendStatus();
@@ -36,7 +41,7 @@ function App() {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/health');
+      const response = await fetch(`${API_BASE_URL}/health`);
       if (response.ok) {
         const data = await response.json();
         setSystemStatus({
@@ -64,7 +69,7 @@ function App() {
 
   const loadSystemStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/stats');
+      const response = await fetch(`${API_BASE_URL}/stats`);
       if (response.ok) {
         const data = await response.json();
         setModelStats(prev => ({
@@ -95,7 +100,7 @@ function App() {
       const startTime = Date.now();
       
       // Call Flask backend API
-      const response = await fetch('http://localhost:5000/predict', {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

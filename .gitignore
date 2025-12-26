@@ -47,12 +47,19 @@ ENV/
 ehthumbs.db
 Thumbs.db
 
-# Node modules
+# Node modules and React build
 node_modules/
+build/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Large model files (optional - uncomment if models are too large)
-# models/*.pkl
-# models/*.csv
+# Large files - too big for GitHub
+models/*.pkl
+models/*.csv
+dataset.csv
+*.csv
 
 # Logs
 *.log

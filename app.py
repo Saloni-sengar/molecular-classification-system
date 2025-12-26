@@ -34,7 +34,11 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
+# Configure CORS for production
+if os.environ.get('FLASK_ENV') == 'production':
+    CORS(app)  # Allow all origins in production
+else:
+    CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])  # Restrict in development
 
 # Global variables for models and data
 models = {}
@@ -686,6 +690,16 @@ if __name__ == '__main__':
     print("🚀 MOLECULAR FUNCTIONAL GROUP PREDICTOR API")
     print("=" * 60)
     
+    # Create mock models if they don't exist
+    if not os.path.exists('models/model_level1.pkl'):
+        print("⚠️ Models not found. Creating mock models...")
+        try:
+            exec(open('create_models.py').read())
+            # Reload the predictor
+            predictor = MolecularPredictor()
+        except Exception as e:
+            print(f"❌ Failed to create models: {e}")
+    
     # Check system status
     if predictor.models_loaded:
         print("✅ ML Models loaded successfully")
@@ -707,15 +721,18 @@ if __name__ == '__main__':
     print("   GET  /stats         - Statistics")
     print("   GET  /models        - Model information")
     print("=" * 60)
-    print("🚀 Starting server on http://localhost:5000")
+    
+    # Get port from environment (Render requirement)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"🚀 Starting server on port {port}")
     print("🔗 Frontend connects to http://localhost:3000")
     print("💡 Supports SMILES (CCO) and formulas (H2O, HNO3)")
     print("=" * 60)
     
     # Start Flask app
     app.run(
-        debug=False,  # Set to False for production
+        debug=False,
         host='0.0.0.0',
-        port=5000,
+        port=port,
         threaded=True
     )
