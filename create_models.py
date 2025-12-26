@@ -82,9 +82,10 @@ def create_mock_models():
         json.dump(metadata, f, indent=2)
     
     print("✅ Mock models created successfully!")
-    print("📋 Supported molecules:")
+    print("📋 Supported molecules for prediction:")
     for smiles in smiles_features.keys():
         print(f"   - {smiles}")
+    print("🔄 Ready for deployment!")
 
 if __name__ == "__main__":
     create_mock_models()
